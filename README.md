@@ -250,3 +250,83 @@ it('should rise ad event when the delete post is clicked', () => {
     comp.onDeletePost(new MouseEvent('click'));
   });
  -->
+
+### TestBed to test component
+
+- the module is used to test the component
+- this will handle all the dependencies of the component
+
+<!--
+beforeEach(() => {
+    POSTS = [
+      {
+        id: 1,
+        title: 'Post 1',
+        body: 'This is post 1',
+      },
+      {
+        id: 2,
+        title: 'Post 2',
+        body: 'This is post 2',
+      },
+      {
+        id: 3,
+        title: 'Post 3',
+        body: 'This is post 3',
+      },
+    ];
+
+    mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        PostsComponent,
+        {
+          provide: PostService,
+          useValue: mockPostService,
+        },
+      ],
+    });
+
+    // component = new PostsComponent(mockPostService); // without TestBed
+    component = TestBed.inject(PostsComponent); // with TestBed
+  });
+ -->
+
+### Declaring a angular TestBed (ATB)
+
+- Testbed.configureTestingModule(): it is used to configure the testbed
+
+  - **Testbed.configureTestingModule({**
+    **declarations: [ComponentName],**
+    **providers: [ServiceName],**
+    **})**
+
+- fixture: it is used to create the component
+
+  - **const fixture = TestBed.createComponent(ComponentName);**
+
+- component: it is used to get the instance of the component
+
+  - **cosnt component = fixture.componentInstance;**
+  - this will give all access to properties and methods of the component
+
+- check the component is created or not
+
+  - **expect(component).toBeDefined();**
+
+- example code: post.component.spec.ts
+
+  - let fixture: ComponentFixture<\PostComponent>;
+  - let comp: PostComponent;
+
+  - beforeEach(() => {
+
+    - TestBed.configureTestingModule({
+      - declarations: [PostComponent],
+    - });
+
+    - fixture = TestBed.createComponent(PostComponent);
+    - comp = fixture.componentInstance;
+
+  - });

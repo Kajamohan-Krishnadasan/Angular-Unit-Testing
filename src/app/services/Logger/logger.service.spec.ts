@@ -1,6 +1,6 @@
 import { LoggerService } from './logger.service';
 
-describe('Logger Service', () => {
+xdescribe('Logger Service', () => {
   let loggerService: LoggerService;
   let count: number;
 

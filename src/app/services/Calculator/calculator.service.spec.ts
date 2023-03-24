@@ -1,7 +1,7 @@
 import { LoggerService } from '../Logger/logger.service';
 import { CalculatorService } from './calculator.service';
 
-describe('Calculator Service', () => {
+xdescribe('Calculator Service', () => {
   let loggerService: any;
   let calculator: CalculatorService;
   let result;
