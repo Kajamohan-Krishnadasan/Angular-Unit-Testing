@@ -86,8 +86,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ### stop creating original service in the test file
 
-<!--
-/**
+```/**
    * here the original LoggerService is called
    * stop this we need to create a mock service
    * spyOn(loggerService, 'log')
@@ -114,7 +113,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
     expect(result).toEqual(4);
     expect(loggerService.log).toHaveBeenCalledTimes(1);
   });
--->
+```
 
 - create a mock service
 - let loggerService = new LoggerService(); // original service
@@ -128,8 +127,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - call the pipe in the component in the test
 - **let pipe = new PipeNamePipe();**
 
-<!--
-// in the strength.pipe.ts file
+```// in the strength.pipe.ts file
 export class StrengthPipe implements PipeTransform {
   transform(value: number): string {
     if (value < 10) {
@@ -164,8 +162,7 @@ describe('StrengthPipe', () => {
 
     expect(pipe.transform(30)).toEqual('30 (strongest)');
   });
-
- -->
+```
 
 ### create a component
 
@@ -173,8 +170,7 @@ describe('StrengthPipe', () => {
 
 ### test post Component
 
-<!--
-let POSTS: Post[];
+````let POSTS: Post[];
   let component: PostsComponent;
   let mockPostService: any;
 
@@ -202,7 +198,7 @@ let POSTS: Post[];
     component = new PostsComponent(mockPostService);
   });
 
-/*****************************************/
+
 
 beforeEach(() => {
   /**
@@ -216,13 +212,12 @@ beforeEach(() => {
   component.postsFromComponent = POSTS;
 
   component.delete(POSTS[1]);
-});
--->
+});```
+
 
 ### testing component having input and output
 
-<!--
-/*
+```/*
 * here we are only testing typescript code not the html
 */
 // in the post.component.ts file
@@ -249,15 +244,14 @@ it('should rise ad event when the delete post is clicked', () => {
 
     comp.onDeletePost(new MouseEvent('click'));
   });
- -->
+````
 
 ### TestBed to test component
 
 - the module is used to test the component
 - this will handle all the dependencies of the component
 
-<!--
-beforeEach(() => {
+```beforeEach(() => {
     POSTS = [
       {
         id: 1,
@@ -291,7 +285,8 @@ beforeEach(() => {
     // component = new PostsComponent(mockPostService); // without TestBed
     component = TestBed.inject(PostsComponent); // with TestBed
   });
- -->
+
+```
 
 ### Declaring a angular TestBed (ATB)
 
@@ -317,7 +312,7 @@ beforeEach(() => {
 
 - example code: post.component.spec.ts
 
-  ```let fixture: ComponentFixture\<PostComponent>;
+  ```let fixture: ComponentFixture<\PostComponent>;
   let comp: PostComponent;
 
   beforeEach(() => {
