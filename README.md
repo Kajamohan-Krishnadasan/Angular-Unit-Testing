@@ -317,7 +317,7 @@ beforeEach(() => {
 
 - example code: post.component.spec.ts
 
-  ```let fixture: ComponentFixture<PostComponent>;
+  ```let fixture: ComponentFixture\<PostComponent>;
   let comp: PostComponent;
 
   beforeEach(() => {
