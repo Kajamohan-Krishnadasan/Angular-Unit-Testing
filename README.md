@@ -119,3 +119,52 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - create a mock service
 - let loggerService = new LoggerService(); // original service
 - let loggerService = jasmine.createSpyObj('LoggerService', ['log']); // mock LoggerService is called
+
+### testing pipes
+
+- create a pipe file
+- **ng g p pipes/pipe-name**
+
+- call the pipe in the component in the test
+- **let pipe = new PipeNamePipe();**
+
+<!--
+// in the strength.pipe.ts file
+export class StrengthPipe implements PipeTransform {
+  transform(value: number): string {
+    if (value < 10) {
+      return value + '(weak)';
+    } else if (value >= 10 && value < 20) {
+      return value + '(strong)';
+    } else {
+      return `${value} (strongest)`;
+    }
+  }
+}
+
+// in the strength.pipe.spec.ts file
+
+import { StrengthPipe } from './strength.pipe';
+
+describe('StrengthPipe', () => {
+  it('should display weak if value is 5', () => {
+    let pipe = new StrengthPipe();
+
+    expect(pipe.transform(5)).toEqual('5 (weak)');
+  });
+
+  it('should display strong if value is 15', () => {
+    let pipe = new StrengthPipe();
+
+    expect(pipe.transform(15)).toEqual('15 (strong)');
+  });
+
+  it('should display strongest if value is 30', () => {
+    let pipe = new StrengthPipe();
+
+    expect(pipe.transform(30)).toEqual('30 (strongest)');
+  });
+
+ -->
+
+
