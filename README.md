@@ -317,16 +317,15 @@ beforeEach(() => {
 
 - example code: post.component.spec.ts
 
-  - let fixture: ComponentFixture<\PostComponent>;
-  - let comp: PostComponent;
+  ```let fixture: ComponentFixture<PostComponent>;
+  let comp: PostComponent;
 
-  - beforeEach(() => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [PostComponent],
+    });
 
-    - TestBed.configureTestingModule({
-      - declarations: [PostComponent],
-    - });
-
-    - fixture = TestBed.createComponent(PostComponent);
-    - comp = fixture.componentInstance;
-
-  - });
+    fixture = TestBed.createComponent(PostComponent);
+    comp = fixture.componentInstance;
+  });
+  ```
