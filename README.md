@@ -167,4 +167,86 @@ describe('StrengthPipe', () => {
 
  -->
 
+### create a component
 
+- **ng g c components/component-name**
+
+### test post Component
+
+<!--
+let POSTS: Post[];
+  let component: PostsComponent;
+  let mockPostService: any;
+
+  beforeEach(() => {
+    POSTS = [
+      {
+        id: 1,
+        title: 'Post 1',
+        body: 'This is post 1',
+      },
+      {
+        id: 2,
+        title: 'Post 2',
+        body: 'This is post 2',
+      },
+      {
+        id: 3,
+        title: 'Post 3',
+        body: 'This is post 3',
+      },
+    ];
+
+    mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost']);
+
+    component = new PostsComponent(mockPostService);
+  });
+
+/*****************************************/
+
+beforeEach(() => {
+  /**
+    * below line is not work
+    * because of delete() method depends on the postService.deletePost()
+    * theirfore, we need to mock the postService.deletePost() method
+    */
+  // component.delete(POSTS[1]);
+
+  mockPostService.deletePost.and.returnValue(of(true)); // mock the postService.deletePost() method
+  component.postsFromComponent = POSTS;
+
+  component.delete(POSTS[1]);
+});
+-->
+
+### testing component having input and output
+
+<!--
+/*
+* here we are only testing typescript code not the html
+*/
+// in the post.component.ts file
+export class PostComponent {
+  @Input() post!: Post;
+
+  @Output() delete = new EventEmitter<Post>();
+
+  onDeletePost(event: Event) {
+    event.stopPropagation();
+    this.delete.emit(this.post);
+  }
+}
+
+// in the post.component.spec.ts file
+it('should rise ad event when the delete post is clicked', () => {
+    const comp = new PostComponent();
+    const post: Post = { id: 1, title: 'test', body: 'test body' };
+    comp.post = post;
+
+    comp.delete.pipe(first()).subscribe((selectedPost) => {
+      expect(selectedPost).toEqual(post);
+    });
+
+    comp.onDeletePost(new MouseEvent('click'));
+  });
+ -->

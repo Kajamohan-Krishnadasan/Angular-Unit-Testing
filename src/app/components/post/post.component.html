@@ -1,0 +1,14 @@
+
+<div class="post-div" *ngIf="post">
+  <a class="post-title" [routerLink]="['detail', post.id]">
+    {{ post.title }}
+  </a>
+
+  <div class="post-body">
+    {{ post.body }}
+  </div>
+
+  <button class="post-delete-button" (click)="onDeletePost($event)">
+    Delete Post
+  </button>
+</div>

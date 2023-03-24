@@ -1,0 +1,9 @@
+<main>
+  <h1>All Post page</h1>
+
+  <div class="posts-div" *ngFor="let post of postsFromComponent">
+    <h2>Post No: {{ post.id }}</h2>
+
+    <app-post [post]="post" (delete)="delete(post)"></app-post>
+  </div>
+</main>
