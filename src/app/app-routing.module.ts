@@ -10,7 +10,7 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'post',
+    path: 'detail/:id',
     component: PostComponent,
   },
   {
@@ -18,6 +18,8 @@ const routes: Routes = [
     component: PostsComponent,
   },
 ];
+
+// const routes: Routes = [];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

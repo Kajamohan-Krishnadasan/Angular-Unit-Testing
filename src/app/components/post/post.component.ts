@@ -13,6 +13,6 @@ export class PostComponent {
 
   onDeletePost(event: Event) {
     event.stopPropagation();
-    this.delete.emit(this.post); 
+    this.delete.emit(this.post);
   }
 }

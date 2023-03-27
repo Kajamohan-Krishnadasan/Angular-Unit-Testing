@@ -86,7 +86,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ### stop creating original service in the test file
 
-```/**
+```\
+/**
    * here the original LoggerService is called
    * stop this we need to create a mock service
    * spyOn(loggerService, 'log')
@@ -127,7 +128,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - call the pipe in the component in the test
 - **let pipe = new PipeNamePipe();**
 
-```// in the strength.pipe.ts file
+```\
+// in the strength.pipe.ts file
 export class StrengthPipe implements PipeTransform {
   transform(value: number): string {
     if (value < 10) {
@@ -170,7 +172,8 @@ describe('StrengthPipe', () => {
 
 ### test post Component
 
-````let POSTS: Post[];
+```\
+let POSTS: Post[];
   let component: PostsComponent;
   let mockPostService: any;
 
@@ -212,12 +215,13 @@ beforeEach(() => {
   component.postsFromComponent = POSTS;
 
   component.delete(POSTS[1]);
-});```
-
+});
+```
 
 ### testing component having input and output
 
-```/*
+```\
+/*
 * here we are only testing typescript code not the html
 */
 // in the post.component.ts file
@@ -244,14 +248,15 @@ it('should rise ad event when the delete post is clicked', () => {
 
     comp.onDeletePost(new MouseEvent('click'));
   });
-````
+```
 
 ### TestBed to test component
 
 - the module is used to test the component
 - this will handle all the dependencies of the component
 
-```beforeEach(() => {
+```\
+beforeEach(() => {
     POSTS = [
       {
         id: 1,
@@ -312,7 +317,8 @@ it('should rise ad event when the delete post is clicked', () => {
 
 - example code: post.component.spec.ts
 
-  ```let fixture: ComponentFixture<\PostComponent>;
+  ```\
+  let fixture: ComponentFixture<PostComponent>;
   let comp: PostComponent;
 
   beforeEach(() => {
@@ -324,3 +330,165 @@ it('should rise ad event when the delete post is clicked', () => {
     comp = fixture.componentInstance;
   });
   ```
+
+### TestBed to test native element and debug element
+
+- nativeElement: it is used to get the html element
+
+- method 1 (using fixture.nativeElement)
+
+  ```\
+    it('should have paragraph with "Kajamohan"',()=>{
+      const bannerElement: HTMLElement = fixture.nativeElement;
+      const p = bannerElement.querySelector('p');
+
+      expect(p.textContent).toEqual('Kajamohan');
+    })
+  ```
+
+- method 2 (using debugElement)
+
+  ```\
+    it('should have paragraph with "Kajamohan"',()=>{
+
+      const bannerDebugElement: DebugElement = fixture.debugElement;
+
+      const bannerElement: HTMLElement = bannerDebugElement.nativeElement;
+
+      const p = bannerElement.querySelector('p');
+
+      expect(p.textContent).toEqual('Kajamohan');
+
+    })
+  ```
+
+  - method 3 (using By.css)
+  - this is the best method to get the element
+
+  ```\
+   it('should have paragraph with "Kajamohan"',()=>{
+
+     const bannerDebugElement: DebugElement = fixture.debugElement;
+
+     const paragraphDebug = bannerDebugElement.query(By.css('p'));
+
+     const paragraphElement: HTMLElement = paragraphDebug.nativeElement;
+
+     expect(paragraphElement.textContent).toEqual ('Kajamohan');
+
+   })
+  ```
+
+### Access the template of the component using the nativeElement
+
+```\
+  it('should render the post title in the anchor element using debug element', () => {
+    const post: Post = { id: 1, title: 'title 1', body: 'body 1' };
+    comp.post = post;
+
+    // will update the data from the component to the template
+    fixture.detectChanges();
+
+    // get the anchor element
+    const postElement: HTMLElement = fixture.nativeElement;
+    const a = postElement.querySelector('a');
+
+    expect((a as HTMLAnchorElement).textContent).toContain(post.title);
+  });
+```
+
+### Access the template of the component using the debugElement
+
+```\
+  it('should render the post title in the anchor element using debug element', () => {
+    const post: Post = { id: 1, title: 'title 1', body: 'body 1' };
+    comp.post = post;
+
+    // will update the data from the component to the template
+    fixture.detectChanges();
+
+    // get the anchor element
+    const postDebugElement: DebugElement = fixture.debugElement;
+    const aElement = postDebugElement.query(By.css('a')).nativeElement;
+
+    expect((aElement as HTMLAnchorElement).textContent).toContain(post.title);
+  });
+```
+
+### checking the component class and compained with a template
+
+- **component.ngOnInit();** or **fixture.detectChanges();** are same
+
+  - if any error add below lines in the beforeEach() method.
+
+    ```\
+    TestBed.configureTestingModule({
+     declarations: [PostsComponent],
+     providers: [
+       {
+         provide: PostService,
+         useValue: mockPostService,
+       },
+     ],
+     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    });
+    ```
+
+### TestBed.configureTestingModule() method
+
+- **declarations**: it is used to declare the component
+- **providers**: it is used to provide the service
+
+  - **provide**: it is used to provide the service
+  - **useValue**: it is used to provide the mock service
+  - **useClass**: it is used to provide the service class
+
+- **imports**: it is used to import the module
+- **schemas**: it is used to declare the custom elements
+
+```\
+TestBed.configureTestingModule({
+  declarations: [PostsComponent],
+  providers: [
+    {
+      provide: PostService,
+      useValue: mockPostService,
+    },
+  ],
+  imports: [HttpClientModule],
+  schemas: [NO_ERRORS_SCHEMA],
+});
+```
+
+### Testing the child component using the TestBed
+
+```\
+/**
+   * here we are creating a fake component class
+   * because we are not testing the PostComponent
+   * we are testing the PostsComponent
+   * therefore, we are creating a fake component class
+   * and we are passing the PostComponent as a input
+   * and we are checking the PostsComponent
+   * and we are not checking the PostComponent
+   */
+  @Component({
+    selector: 'app-post',
+    template: '<div></div>',
+  })
+  class FakePostComponent {
+    @Input() post!: Post;
+  }
+
+  it('should create one post child element for each post', () => {
+    mockPostService.getPosts.and.returnValue(of(POSTS));
+    fixture.detectChanges();
+
+    const debugElements = fixture.debugElement;
+    const postsElement = debugElements.queryAll(By.css('.posts-div'));
+
+    expect(postsElement.length).toBe(POSTS.length);
+  });
+
+
+```

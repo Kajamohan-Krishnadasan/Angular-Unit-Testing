@@ -1,8 +1,10 @@
 import { of } from 'rxjs/internal/observable/of';
 import { Post } from 'src/app/models/Post';
 import { PostsComponent } from './posts.component';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PostService } from 'src/app/services/Post/post.service';
+import { Component, Input } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 class mockPostServiceTestBed {
   getPosts() {}
@@ -231,6 +233,116 @@ xdescribe('Testing Posts Component using TestBed method 2', () => {
 
       component.delete(POSTS[1]);
       expect(postService.deletePost).toHaveBeenCalledTimes(1);
+    });
+  });
+});
+
+describe('Testing Posts Component using TestBed (checking the component class and compained with a template)', () => {
+  let POSTS: Post[];
+  let component: PostsComponent;
+  let mockPostService: any;
+  let fixture: ComponentFixture<PostsComponent>;
+
+  /**
+   * here we are creating a fake component class
+   * because we are not testing the PostComponent
+   * we are testing the PostsComponent
+   * therefore, we are creating a fake component class
+   * and we are passing the PostComponent as a input
+   * and we are checking the PostsComponent
+   * and we are not checking the PostComponent
+   */
+  @Component({
+    selector: 'app-post',
+    template: '<div></div>',
+  })
+  class FakePostComponent {
+    @Input() post!: Post;
+  }
+
+  beforeEach(() => {
+    POSTS = [
+      {
+        id: 1,
+        title: 'Post 1',
+        body: 'This is post 1',
+      },
+      {
+        id: 2,
+        title: 'Post 2',
+        body: 'This is post 2',
+      },
+      {
+        id: 3,
+        title: 'Post 3',
+        body: 'This is post 3',
+      },
+    ];
+
+    mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost']);
+
+    // here we are checking the component class and compained with a template
+    /**
+     * TestBed.configureTestingModule() method is used to configure the testing module
+     * declarations: here we are declaring the component class
+     * providers: here we are declaring the service class
+     */
+    TestBed.configureTestingModule({
+      declarations: [PostsComponent, FakePostComponent],
+      providers: [
+        {
+          provide: PostService,
+          useValue: mockPostService,
+        },
+      ],
+    });
+
+    fixture = TestBed.createComponent(PostsComponent);
+    component = fixture.componentInstance;
+  });
+
+  xit('should set Posts from the service directly', () => {
+    mockPostService.getPosts.and.returnValue(of(POSTS));
+
+    // component.ngOnInit();
+    fixture.detectChanges();
+    alert(component.postsFromComponent.length);
+    expect(component.postsFromComponent.length).toBe(3);
+  });
+
+  it('should create one post child element for each post', () => {
+    mockPostService.getPosts.and.returnValue(of(POSTS));
+    fixture.detectChanges();
+
+    const debugElements = fixture.debugElement;
+    const postsElement = debugElements.queryAll(By.css('.posts-div'));
+
+    expect(postsElement.length).toBe(POSTS.length);
+  });
+
+  xdescribe('Delete', () => {
+    beforeEach(() => {
+      mockPostService.deletePost.and.returnValue(of(true));
+      component.postsFromComponent = POSTS;
+    });
+
+    it('should delete the selected post from the posts', () => {
+      component.delete(POSTS[1]);
+
+      expect(component.postsFromComponent.length).toEqual(2);
+    });
+
+    it('should delete the actual post from the selected post', () => {
+      component.delete(POSTS[1]);
+
+      for (let post of component.postsFromComponent) {
+        expect(post).not.toEqual(POSTS[1]);
+      }
+    });
+
+    it('should call the delete method in Post service only once', () => {
+      component.delete(POSTS[1]);
+      expect(mockPostService.deletePost).toHaveBeenCalledTimes(1);
     });
   });
 });
