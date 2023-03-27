@@ -1,6 +1,6 @@
-import { NO_ERRORS_SCHEMA } from '@angular/compiler';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { first } from 'rxjs';
@@ -28,6 +28,7 @@ describe('Post Component (TestBed)', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [PostComponent],
+      imports: [RouterModule.forRoot([])],
     });
 
     fixture = TestBed.createComponent(PostComponent);

@@ -6,7 +6,8 @@ import { PostService } from 'src/app/services/Post/post.service';
 import { Component, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PostComponent } from '../post/post.component';
-
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 class mockPostServiceTestBed {
   getPosts() {}
   deletePost(post: Post) {
@@ -377,6 +378,7 @@ describe('Testing Posts Component using TestBed and real PostComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [PostsComponent, PostComponent],
+      imports: [ RouterModule.forRoot([])],
       providers: [
         {
           provide: PostService,
@@ -465,6 +467,7 @@ describe('Posts Component', () => {
 
     TestBed.configureTestingModule({
       declarations: [PostsComponent, PostComponent],
+      imports: [RouterModule.forRoot([])],
       providers: [
         {
           provide: PostService,

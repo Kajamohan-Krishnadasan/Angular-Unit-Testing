@@ -1,0 +1,36 @@
+<div class="post-detail-div" *ngIf="post">
+  <h2 class="post-detail-div-title">{{ post.title }}</h2>
+  <div class="post-detail-div-body">{{ post.body }}</div>
+
+  <div class="post-detail-div-div">
+    <label class="post-detail-div-div-label">
+      Title:
+      <input
+        class="post-detail-div-div-label-input"
+        type="text"
+        [(ngModel)]="post.title"
+      />
+    </label>
+
+    <label class="post-detail-div-div-label">
+      Body:
+      <textarea
+        class="post-detail-div-div-label-input"
+        [(ngModel)]="post.body"
+      ></textarea>
+    </label>
+  </div>
+
+  <div class="post-detail-div-buttons">
+    <button
+      class="post-detail-buttons-div-go-back-button button"
+      (click)="goBack()"
+    >
+      Go Back
+    </button>
+
+    <button class="post-detail-div-buttons-save-button button" (click)="save()">
+      Save
+    </button>
+  </div>
+</div>

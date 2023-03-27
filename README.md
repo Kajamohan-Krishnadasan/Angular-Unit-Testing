@@ -688,6 +688,8 @@ describe('getPosts()', () => {
 
 ### Testing the delete button click event
 
+- testing from parent component
+
 ```\
   it('should call delete method when post component delete button is clicked', () => {
     // here we are creating a spy for the delete method in the PostComponent
@@ -710,4 +712,98 @@ describe('getPosts()', () => {
         expect(component.delete).toHaveBeenCalledWith(POSTS[i]);
       }
     });
+```
+
+- check delete event is emitted in Post component
+
+```\
+ it('should call the delete method when the delete event is emitted in Post component', () => {
+      spyOn(component, 'delete');
+
+      mockPostService.getPosts.and.returnValue(of(POSTS));
+      fixture.detectChanges();
+
+      let postComponentDebugElements = fixture.debugElement.queryAll(
+        By.directive(PostComponent)
+      );
+
+      for (let i = 0; i < postComponentDebugElements.length; i++) {
+        (
+          postComponentDebugElements[i].componentInstance as PostComponent
+        ).delete.emit(POSTS[i]);
+
+        expect(component.delete).toHaveBeenCalledWith(POSTS[i]);
+      }
+    });
+```
+
+### Testing the routing
+
+```\
+  let fixture: ComponentFixture<PostDetailComponent>;
+  let component: PostDetailComponent;
+  let mockPostService: jasmine.SpyObj<PostService>;
+
+  beforeEach(() => {
+    // here we create a mock ActivatedRoute object using the snapshot property
+    let mockActivatedRoute = {
+      snapshot: {
+        paramMap: {
+          get: () => {
+            return '3';
+          },
+        },
+      },
+    };
+
+    mockPostService = jasmine.createSpyObj(['getPost', 'updatePost']);
+    let mockLocation = jasmine.createSpyObj(['back']);
+
+    TestBed.configureTestingModule({
+      declarations: [PostDetailComponent],
+      imports: [FormsModule],
+      providers: [
+        {
+          provide: Location,
+          useValue: mockLocation,
+        },
+        {
+          provide: PostService,
+          useValue: mockPostService,
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: mockActivatedRoute,
+        },
+      ],
+    });
+    fixture = TestBed.createComponent(PostDetailComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should render the post title in the h2 tag', () => {
+    mockPostService.getPost.and.returnValue(
+      of({
+        id: 3,
+        title: 'Test Title 3',
+        body: 'Test Body 3',
+      } as Post)
+    );
+
+    fixture.detectChanges();
+
+    // method 1
+    const element1 = fixture.debugElement.query(By.css('h2'))
+      .nativeElement as HTMLElement;
+
+    expect(element1.textContent).toContain(
+      fixture.componentInstance.post.title
+    );
+
+    // method 2
+    const element2 = fixture.nativeElement.querySelector('h2') as HTMLElement;
+    expect(element2.textContent).toContain(
+      fixture.componentInstance.post.title
+    );
+  });
 ```

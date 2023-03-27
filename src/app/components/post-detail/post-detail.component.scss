@@ -1,0 +1,109 @@
+.post-detail-div {
+  font-family: "Roboto", sans-serif;
+  color: #000;
+  margin-bottom: 10px;
+
+  &-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    font-family: "Roboto", sans-serif;
+    color: #985e5e;
+    font-weight: bold;
+  }
+
+  &-body {
+    font-size: 1.5rem;
+    // margin-bottom: 10px;
+    margin: 0 auto;
+    width: 90%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #ccc;
+    margin-bottom: 20px;
+    background-color: #fff;
+  }
+
+  &-div {
+    box-shadow: 0 0 10px #ccc;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow: hidden;
+    // height: 100%;
+
+    :first-child {
+      display: flex;
+      flex-direction: column;
+
+      input {
+        width: 90%;
+        font-size: 1rem;
+        border-radius: 1rem;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        // border-color: rgb(88, 88, 171);
+
+        // outline: none;
+        &:focus {
+          outline: none;
+          border-width: 4px;
+          border-color: rgba(25, 99, 209, 0.767);
+        }
+      }
+    }
+
+    :last-child {
+      textarea {
+        width: 90%;
+        height: 100%;
+        font-size: 1rem;
+        border-radius: 1rem;
+        padding: 1rem;
+        outline: none;
+        border: 1px solid #ccc;
+        
+        &:focus {
+          border-width: 4px;
+          border-color: rgba(25, 99, 209, 0.767);
+        }
+      }
+    }
+
+    &-label {
+      font-size: 2rem;
+    }
+  }
+
+  &-buttons {
+    padding: 15px 20px;
+
+    .button {
+      color: #fff;
+      border: none;
+      font-size: 1.5rem;
+      padding: 15px 20px;
+      margin-left: 20px;
+      margin-top: 10px;
+
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: "Roboto", sans-serif;
+    }
+    :first-child {
+      background-color: rgb(35, 207, 150);
+      &:hover {
+        background-color: rgb(20, 92, 68);
+        box-shadow: 0 0 10px #2d2828, 0 0 10px #232121;
+      }
+    }
+    :last-child {
+      background-color: blue;
+      &:hover {
+        background-color: rgb(7, 7, 172);
+        box-shadow: 0 0 10px #2d2828, 0 0 10px #232121;
+      }
+    }
+  }
+}

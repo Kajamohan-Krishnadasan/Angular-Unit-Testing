@@ -9,10 +9,18 @@ import { PostsComponent } from './components/posts/posts.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PostComponent } from './components/post/post.component';
 import { RouterModule } from '@angular/router';
+import { PostDetailComponent } from './components/post-detail/post-detail.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, StrengthPipe, PostsComponent, PostComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, RouterModule],
+  declarations: [
+    AppComponent,
+    StrengthPipe,
+    PostsComponent,
+    PostComponent,
+    PostDetailComponent,
+  ],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
