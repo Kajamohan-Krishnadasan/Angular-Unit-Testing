@@ -7,7 +7,7 @@ import { first } from 'rxjs';
 import { Post } from 'src/app/models/Post';
 import { PostComponent } from './post.component';
 
-xdescribe('Post Component', () => {
+describe('Post Component', () => {
   it('should rise ad event when the delete post is clicked', () => {
     const comp = new PostComponent();
     const post: Post = { id: 1, title: 'test', body: 'test body' };
@@ -21,7 +21,7 @@ xdescribe('Post Component', () => {
   });
 });
 
-xdescribe('Post Component (TestBed)', () => {
+describe('Post Component (TestBed)', () => {
   let fixture: ComponentFixture<PostComponent>;
   let comp: PostComponent;
 

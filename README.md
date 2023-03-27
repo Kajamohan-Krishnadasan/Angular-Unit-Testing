@@ -492,3 +492,222 @@ TestBed.configureTestingModule({
 
 
 ```
+
+### Testing the HttpClient as Dependency
+
+#### Normal way to test the HttpClient
+
+```\
+describe('getPosts()', () => {
+  it('should return expected posts when getposts is called', () => {
+    postService.getPosts().subscribe((posts) => {
+      expect(posts).toEqual(POSTS);
+    });
+
+    const req = httpTestingController.expectOne('https://jsonplaceholder.typicode.com/posts');
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(POSTS);
+  });
+});
+```
+
+#### using the spyObj
+
+```\
+  let postService: PostService;
+  let httpClientSpy: jasmine.SpyObj<HttpClient>;
+
+  beforeEach(() => {
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'delete']);
+    postService = new PostService(httpClientSpy);
+  });
+
+  describe('getPosts()', () => {
+    it('should return expected posts when getposts is called', (done: DoneFn) => {
+      httpClientSpy.get.and.returnValue(of(POSTS));
+
+      postService.getPosts().subscribe({
+        next: (posts) => {
+          // check that posts is equal to POSTS
+          expect(posts).toEqual(POSTS);
+          done();
+        },
+        error: () => {
+          done.fail;
+        },
+      });
+
+      // check that the spy was called once
+      expect(httpClientSpy.get).toHaveBeenCalledTimes(1);
+    });
+  });
+```
+
+#### using TestBed
+
+```\
+  let postService: PostService;
+  let httpClientSpy: jasmine.SpyObj<HttpClient>;
+
+  beforeEach(() => {
+    let httpClientSpyObj = jasmine.createSpyObj('HttpClient', [
+      'get',
+      'delete',
+    ]);
+    TestBed.configureTestingModule({
+      providers: [
+        PostService,
+        {
+          provide: HttpClient,
+          useValue: httpClientSpyObj,
+        },
+      ],
+    });
+    postService = TestBed.inject(PostService);
+    httpClientSpy = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
+  });
+
+  describe('getPosts() ', () => {
+    it('should return expected posts when getposts is called', (done: DoneFn) => {
+      httpClientSpy.get.and.returnValue(of(POSTS));
+
+      postService.getPosts().subscribe({
+        next: (posts) => {
+          // check that posts is equal to POSTS
+          expect(posts).toEqual(POSTS);
+          done();
+        },
+        error: () => {
+          done.fail;
+        },
+      });
+
+      // check that the spy was called once
+      expect(httpClientSpy.get).toHaveBeenCalledTimes(1);
+    });
+  });
+```
+
+#### using the HttpClientTestingModule
+
+- requset.flush() is used to send the response to the subscriber
+
+```\
+  let httpClient: HttpClient;
+  let httpTestingController: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+    });
+
+    httpClient = TestBed.inject(HttpClient);
+    httpTestingController = TestBed.inject(HttpTestingController);
+  });
+
+  it('should call the test url with get request', () => {
+    const testData: Data = { name: 'Kajamohan' };
+
+    httpClient.get<Data>(testUrl).subscribe((data) => {
+      expect(data).toEqual(testData);
+    });
+
+    // expectOne() returns a single request that matches the given URL, or fails if no or multiple requests match the URL.
+    const req = httpTestingController.expectOne(testUrl);
+
+    // this is used to send the response to the subscriber
+    req.flush(testData);
+
+    expect(req.request.method).toBe ('GET');
+  });
+```
+
+### Test multiple Http Requests
+
+```\
+ it('should test multiple requests', () => {
+    const testData: Data[] = [
+      {
+        name: 'Kajamohan',
+      },
+      {
+        name: 'Niroshan',
+      },
+    ];
+
+    // call the get method 3 times
+    httpClient.get<Data[]>(testUrl).subscribe((data) => {
+      expect(data.length).toEqual(0);
+    });
+
+    httpClient.get<Data[]>(testUrl).subscribe((data) => {
+      expect(data).toEqual([testData[0]]);
+    });
+
+    httpClient.get<Data[]>(testUrl).subscribe((data) => {
+      expect(data).toEqual(testData);
+    });
+
+    // here we need to use match() method to get the requests
+    const requests = httpTestingController.match(testUrl);
+
+    console.log(requests);
+    expect(requests.length).toBe(3);
+
+    // define the response for each request
+    requests[0].flush([]);
+    requests[1].flush([testData[0]]);
+    requests[2].flush(testData);
+  });
+```
+
+- check getPost method return single post or not
+
+```\
+  describe('getPost()', () => {
+    it('sholud return single post when getPost() is called with postId', () => {
+      postService.getPost(1).subscribe();
+      /**
+       * If we use this line of code this test will fail because
+       * we using httpTestingController.verify() method
+       */
+      // postService.getPost(2).subscribe();
+
+      const req = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+
+      expect(req.request.method).toBe('GET');
+
+      // this one we can use in afterEach() method
+      httpTestingController.verify();
+    });
+  });
+```
+
+### Testing the delete button click event
+
+```\
+  it('should call delete method when post component delete button is clicked', () => {
+    // here we are creating a spy for the delete method in the PostComponent
+      spyOn(component, 'delete');
+      mockPostService.getPosts.and.returnValue(of(POSTS));
+      fixture.detectChanges();
+
+      // here we are getting all the post component debug elements
+      let postComponentDebugElements = fixture.debugElement.queryAll(
+        By.directive(PostComponent)
+      );
+
+      for (let i = 0; i < postComponentDebugElements.length; i++) {
+        // here we are triggering the click event
+        postComponentDebugElements[i]
+          .query(By.css('button'))
+          .triggerEventHandler('click', { preventDefault: () => {} });
+
+        // here we are checking the delete method is called or not
+        expect(component.delete).toHaveBeenCalledWith(POSTS[i]);
+      }
+    });
+```

@@ -12,7 +12,7 @@ export class PostComponent {
   @Output() delete = new EventEmitter<Post>();
 
   onDeletePost(event: Event) {
-    event.stopPropagation();
+    event.preventDefault();
     this.delete.emit(this.post);
   }
 }

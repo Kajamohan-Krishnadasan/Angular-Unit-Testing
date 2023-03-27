@@ -13,7 +13,7 @@ describe('User service', () => {
 
 */
 
-xdescribe('First Test', () => {
+describe('First Test', () => {
   let testVariable: any;
 
   beforeEach(() => {

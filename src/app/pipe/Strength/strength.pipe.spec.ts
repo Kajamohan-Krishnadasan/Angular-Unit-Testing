@@ -1,6 +1,6 @@
 import { StrengthPipe } from './strength.pipe';
 
-xdescribe('Strength Pipe', () => {
+describe('Strength Pipe', () => {
   let pipe: StrengthPipe;
 
   beforeEach(() => {
